@@ -1,16 +1,21 @@
+import groovy.json.JsonSlurper
 pipeline {
     agent any
     stages {
             stage('Initialize Parameters') {
                 steps {
                     script {
-                        def jobParameters = readJson file: 'job_parameters.json'
+                        // 读取文件
+                        def jsonText = readFile 'job_parameters.json'
+                        // 解析 JSON
+                        def jsonSlurper = new JsonSlurper()
+                        def jobParameters = jsonSlurper.parseText(jsonText)
                         properties([
                             parameters([
                                         choice(
                                             name: 'Some choices',
                                             description: 'Select from these choices',
-                                            choices: jobParameters.someChoices
+                                            choices: jobParameters.someChoices.join('\n')
                                         ),
                                         // all your parameters go here
                                         string(
