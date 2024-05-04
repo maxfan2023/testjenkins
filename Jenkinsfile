@@ -4,12 +4,26 @@ pipeline {
             stage('Initialize Parameters') {
                 steps {
                     script {
+                        def jobParameters = readJson file: 'job_parameters.json'
                         properties([
                             parameters([
-                                        activeChoiceParam(name: 'MY_CHOICE', description: 'Select an option') {
-                                            choiceType('SINGLE_SELECT')
-                                            scriptlerScriptPath('generate_dropdown_menu.groovy') // 使用 Scriptler 插件来运行 Groovy 脚本
-                                        }
+                                        choice(
+                                            name: 'Some choices',
+                                            description: 'Select from these choices',
+                                            choices: jobParameters.someChoices
+                                        ),
+                                        // all your parameters go here
+                                        string(
+                                            name: 'Some value',
+                                            description: 'Define this value',
+                                            defaultValue: jobParameters.someDefaultValue,
+                                            trim: true
+                                        ),
+                                        booleanParam(
+                                            name: 'Abort on parameter change',
+                                            description: 'Enable to update the build parameters',
+                                            defaultValue: false
+                                        )
                             ])
                         ])
                     }
