@@ -1,20 +1,22 @@
 pipeline {
     agent any
-    parameters {
-        activeChoiceParam(name: 'MY_CHOICE', description: '选择一个选项') {
-            choiceType('SINGLE_SELECT')
-            groovyScript {
-                script("""
-                    return ['Option 1', 'Option 2', 'Option 3']
-                """)
-                fallbackScript("return ['Error: No options available']")
+    stages {
+        stage('Initialize Parameters') {
+            steps {
+                script {
+                    // 假设从外部系统获取了参数列表
+                    def newChoices = 'Option 1,Option 2,Option 3'
+                    properties([
+                        parameters([
+                            choice(name: 'MY_CHOICE', choices: newChoices.split(','), description: '动态生成的选项')
+                        ])
+                    ])
+                }
             }
         }
-    }
-    stages {
-        stage('Example') {
+        stage('Use Parameters') {
             steps {
-                echo "选中的选项是: ${params.MY_CHOICE}"
+                echo "动态设置的参数 MY_CHOICE 的值是：${params.MY_CHOICE}"
             }
         }
     }
