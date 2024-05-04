@@ -1,14 +1,17 @@
-def jsonText = readFile 'job_parameters.json'
+import java.text.SimpleDateFormat
+import java.util.Date
+
+def jobParameters = readJSON file: 'job_parameters.json'
 // 解析 JSON
-def jsonSlurper = new JsonSlurper()
-def jobParameters = jsonSlurper.parseText(jsonText)
+// def jsonSlurper = new JsonSlurper()
+// def jobParameters = jsonSlurper.parseText(jsonText)
 
 properties([
     parameters([
                 choice(
                     name: 'Some choices',
                     description: 'Select from these choices',
-                    choices: jobParameters.someChoices.join('\n')
+                    choices: jobParameters.someChoices
                 ),
                 // all your parameters go here
                 string(
