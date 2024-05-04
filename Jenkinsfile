@@ -1,24 +1,27 @@
+def jsonText = readFile 'job_parameters.json'
+// 解析 JSON
+def jsonSlurper = new JsonSlurper()
+def jobParameters = jsonSlurper.parseText(jsonText)
+
 properties([
     parameters([
-        activeChoiceParam(
-            name: 'DYNAMIC_CHOICE',
-            description: 'Dynamically populated choices',
-            script: [
-                $class: 'GroovyScript',
-                script: '''
-                    def jsonSlurper = new groovy.json.JsonSlurper()
-                    def file = new File('job_parameters.json')
-                    def data = jsonSlurper.parse(file)
-                    return data.someChoices
-                ''',
-                fallbackScript: [
-                    script: "return ['Error: Failed to load choices']",
-                    sandbox: true
-                ]
-            ],
-            choiceType: 'PT_SINGLE_SELECT'
-
-        )
+                choice(
+                    name: 'Some choices',
+                    description: 'Select from these choices',
+                    choices: jobParameters.someChoices.join('\n')
+                ),
+                // all your parameters go here
+                string(
+                    name: 'Some value',
+                    description: 'Define this value',
+                    defaultValue: jobParameters.someDefaultValue,
+                    trim: true
+                ),
+                booleanParam(
+                    name: 'Abort on parameter change',
+                    description: 'Enable to update the build parameters',
+                    defaultValue: false
+                )
     ])
 ])
 
