@@ -16,8 +16,8 @@ properties([
                     sandbox: true
                 ]
             ],
-            choiceType: 'PT_SINGLE_SELECT',
-            description: 'Select an option'
+            choiceType: 'PT_SINGLE_SELECT'
+
         )
     ])
 ])
