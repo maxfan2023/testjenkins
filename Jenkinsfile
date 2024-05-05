@@ -13,7 +13,7 @@ pipeline {
                         properties([
                             parameters([
                                         choice(
-                                            name: 'Some choices',
+                                            name: 'Some_choices',
                                             description: 'Select from these choices',
                                             choices: jobParameters.someChoices.join('\n')
                                         ),
@@ -36,7 +36,7 @@ pipeline {
             }
         stage('Hello') {
             steps {
-                echo "Selected option: ${params.MY_CHOICE}"
+                echo "Selected option: ${params.Some_choices}"
             }
         }
     }
