@@ -1,10 +1,12 @@
-detailedApplications:
-  Template1:
+Template1:
+  value:
     - App1
     - App2
-  Template2:
+Template2:
+  value:
     - App3
     - App4
-  Template3:
+Template3:
+  value:
     - App5
     - App6

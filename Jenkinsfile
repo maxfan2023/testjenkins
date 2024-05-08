@@ -1,27 +1,30 @@
-// 在 Jenkinsfile 的开头定义两个变量
-def templateNames = ['Template1', 'Template2', 'Template3']
-def detailedApplications = [ 'Template1': ['App1', 'App2'], 'Template2': ['App3', 'App4'], 'Template3': ['App5', 'App6'] ]
+properties([
+    parameters([
+        [$class: 'ExtendedChoiceParameterDefinition',
+            name: 'TEMPLATE_NAME',
+            type: 'PT_SINGLE_SELECT',
+            description: 'Select a template',
+            value: 'Template1', // 默认值
+            choiceType: 'PT_LOAD_FROM_FILE', // 从文件加载选项
+            choiceFile: 'templates.yaml', // YAML 文件路径
+            choiceTarget: '$$.key', // 从 YAML 中提取 key 作为选项
+            referencedParameter: 'TEMPLATE_NAME' // 引用自身作为关联参数
+        ],
+        [$class: 'ExtendedChoiceParameterDefinition',
+            name: 'APPLICATION_NAME',
+            type: 'PT_SINGLE_SELECT',
+            description: 'Select an application',
+            value: 'App1', // 默认值
+            choiceType: 'PT_LOAD_FROM_FILE', // 从文件加载选项
+            choiceFile: 'applications.yaml', // YAML 文件路径
+            choiceTarget: '$[_EXTENDED_CHOICE_PARAMETER_REFERENCE_VALUE.TEMPLATE_NAME].value', // 根据 TEMPLATE_NAME 的值动态加载选项
+            referencedParameter: 'TEMPLATE_NAME' // 关联参数
+        ]
+    ])
+])
 
 pipeline {
     agent any
-    parameters {
-        // 第一个下拉列表
-        choice(
-            name: 'TEMPLATE_NAME',
-            choices: templateNames,
-            description: 'Select a template'
-        )
-        // 第二个下拉列表
-        script {
-            // 根据第一个下拉列表的选择动态生成第二个下拉列表的选项
-            def apps = detailedApplications[params.TEMPLATE_NAME]
-            choice(
-                name: 'APPLICATION_NAME',
-                choices: apps,
-                description: 'Select an application'
-            )
-        }
-    }
     stages {
         stage('Example') {
             steps {
