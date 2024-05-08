@@ -1,35 +1,52 @@
 import groovy.json.JsonSlurper
+
 pipeline {
     agent any
+
+    parameters {
+        script {
+            properties([
+                pipelineParameter(
+                    name: 'TEMPLATE',
+                    type: 'choice',
+                    choices: [],
+                    defaultValue: ''
+                ),
+                pipelineParameter(
+                    name: 'APPLICATION',
+                    type: 'choice',
+                    choices: [],
+                    defaultValue: ''
+                )
+            ])
+        }
+    }
+
     stages {
             stage('Initialize Parameters') {
                 steps {
                     script {
-                        // 读取文件
-                        def jsonText = readFile 'job_parameters.json'
-                        // 解析 JSON
-                        def jsonSlurper = new JsonSlurper()
-                        def jobParameters = jsonSlurper.parseText(jsonText)
+                            // 读取模板名称
+                            def templates = readYaml file: 'templates.yaml'
+                            def templateList = templates.templateNames
+
+                            // 读取具体应用程序
+                            def applications = readYaml file: 'applications.yaml'
+                            def applicationMap = applications.detailedApplications
                         properties([
-                            parameters([
-                                        choice(
-                                            name: 'Some_choices',
-                                            description: 'Select from these choices',
-                                            choices: jobParameters.someChoices.join('\n')
-                                        ),
-                                        // all your parameters go here
-                                        string(
-                                            name: 'Some value',
-                                            description: 'Define this value',
-                                            defaultValue: jobParameters.someDefaultValue,
-                                            trim: true
-                                        ),
-                                        booleanParam(
-                                            name: 'Abort on parameter change',
-                                            description: 'Enable to update the build parameters',
-                                            defaultValue: false
-                                        )
-                            ])
+                                pipelineParameter(
+                                    name: 'TEMPLATE',
+                                    type: 'choice',
+                                    choices: templateList,
+                                    defaultValue: templateList[0]
+                                ),
+                                pipelineParameter(
+                                    name: 'APPLICATION',
+                                    type: 'choice',
+                                    choices: applicationMap[templateList[0]],
+                                    defaultValue: applicationMap[templateList[0]][0]
+                                )
+
                         ])
                     }
                 }
