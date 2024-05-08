@@ -9,20 +9,25 @@ pipeline {
                     def templateData = readYaml file: 'templates.yaml'
                     def applicationData = readYaml file: 'applications.yaml'
 
+                    def templateChoices = templateData.templateNames.join("\\n")
+                    def applicationsMap = applicationData.detailedApplications.collect { key, value ->
+                        "\"${key}\": [${value.collect { "\"${it}\"" }.join(", ")}]"
+                    }.join(", ")
+
                     def dslScript = """
                     job('dynamic-job') {
                         parameters {
                             activeChoiceParam('TEMPLATE') {
                                 choiceType('SINGLE_SELECT')
                                 groovyScript {
-                                    script("return \$${templateData.templateNames}")
+                                    script("return [${templateChoices}]")
                                 }
                             }
                             activeChoiceReactiveParam('APPLICATION') {
                                 choiceType('SINGLE_SELECT')
                                 groovyScript {
                                     script('''
-                                        def applications = \$${applicationData.detailedApplications}
+                                        def applications = [${applicationsMap}]
                                         return applications[params.TEMPLATE]
                                     ''')
                                 }
@@ -31,10 +36,6 @@ pipeline {
                         }
                     }
                     """
-                    // 替换脚本中的占位符
-                    dslScript = dslScript.replace("\$${templateData}", templateData.templateNames.join('\n'))
-                    dslScript = dslScript.replace("\$${applicationData}", applicationData.detailedApplications)
-
                     // 执行 Job DSL 脚本来创建或更新作业
                     jobDsl(script: dslScript)
                 }
