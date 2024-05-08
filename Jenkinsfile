@@ -1,23 +1,26 @@
 pipeline {
     agent any
-    parameters {
-        // 使用Active Choices插件提供的参数类型
-        extendedChoice(
-            name: 'TEMPLATE',
-            type: 'PT_SINGLE_SELECT',
-            groovyScript: '''return ['Template1', 'Template2', 'Template3']'''
-        )
-        extendedChoice(
-            name: 'APPLICATION',
-            type: 'PT_SINGLE_SELECT',
-            groovyScript: '''return [
-                'Template1': ['App1', 'App2'],
-                'Template2': ['App3', 'App4'],
-                'Template3': ['App5', 'App6']
-            ][params.TEMPLATE]'''
-        )
-    }
     stages {
+        stage('Initialization') {
+            steps {
+                script {
+                    properties([
+                        parameters([
+                            choice(
+                                name: 'TEMPLATE',
+                                choices: ['Template1', 'Template2', 'Template3'].join('\n'),
+                                description: 'Select a template'
+                            ),
+                            choice(
+                                name: 'APPLICATION',
+                                choices: getApplications(env.TEMPLATE).join('\n'),
+                                description: 'Select an application based on template'
+                            )
+                        ])
+                    ])
+                }
+            }
+        }
         stage('Build') {
             steps {
                 echo "Selected Template: ${params.TEMPLATE}"
@@ -25,4 +28,14 @@ pipeline {
             }
         }
     }
+}
+
+// A helper method to get applications based on the template
+def getApplications(String template) {
+    def applications = [
+        'Template1': ['App1', 'App2'],
+        'Template2': ['App3', 'App4'],
+        'Template3': ['App5', 'App6']
+    ]
+    return applications[template] ?: []
 }
