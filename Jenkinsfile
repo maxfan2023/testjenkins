@@ -1,41 +1,29 @@
 pipeline {
     agent any
+
+    parameters {
+        choiceParam(name: 'templateName', choices: readFile('templates.yaml').templateNames, description: 'Select a template')
+        choiceParam(name: 'detailedApplication', choices: ['': ''], description: 'Select an application')
+    }
+
     stages {
-        stage('Initialization') {
+        stage('Prepare') {
             steps {
                 script {
-                    properties([
-                        parameters([
-                            choice(
-                                name: 'TEMPLATE',
-                                choices: ['Template1', 'Template2', 'Template3'].join('\n'),
-                                description: 'Select a template'
-                            ),
-                            choice(
-                                name: 'APPLICATION',
-                                choices: getApplications(env.TEMPLATE).join('\n'),
-                                description: 'Select an application based on template'
-                            )
-                        ])
-                    ])
+                    // 读取 detailed_applications.yaml 文件
+                    detailedApplications = readYaml('detailed_applications.yaml')
+
+                    // 根据 templateName 过滤 detailedApplications
+                    filteredApps = detailedApplications[params.templateName] ?: []
+
+                    // 更新第二个下拉列表选项
+                    updateChoiceParameter('detailedApplication', filteredApps.collect { it })
                 }
             }
         }
+
         stage('Build') {
-            steps {
-                echo "Selected Template: ${params.TEMPLATE}"
-                echo "Selected Application: ${params.APPLICATION}"
-            }
+            // 您的构建步骤...
         }
     }
-}
-
-// A helper method to get applications based on the template
-def getApplications(String template) {
-    def applications = [
-        'Template1': ['App1', 'App2'],
-        'Template2': ['App3', 'App4'],
-        'Template3': ['App5', 'App6']
-    ]
-    return applications[template] ?: []
 }
