@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     // 读取 detailed_applications.yaml 文件
-                    detailedApplications = readYaml('detailed_applications.yaml')
+                    detailedApplications = readYaml('applications.yaml')
 
                     // 根据 templateName 过滤 detailedApplications
                     filteredApps = detailedApplications[params.templateName] ?: []
