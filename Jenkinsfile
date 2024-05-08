@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        choice(name: 'templateName', choices: readFile(workspacePath + '/templates.yaml').templateNames, description: '选择模板')
+        choice(name: 'templateName', choices: readFile('/templates.yaml').templateNames, description: '选择模板')
         choice(name: 'detailedApplication', choices: ['': ''], description: '选择应用')
     }
 
@@ -12,7 +12,7 @@ pipeline {
                     script {
 
                                 // 读取 detailed_applications.yaml 文件
-                                def detailedApplications = readYaml(file(workspacePath + '/applications.yaml'))
+                                def detailedApplications = readYaml(file( '/applications.yaml'))
 
                                 // 根据 templateName 过滤 detailedApplications
                                 def filteredApps = detailedApplications[params.templateName] ?: []
