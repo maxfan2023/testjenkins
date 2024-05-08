@@ -1,1 +1,4 @@
-['Template1', 'Template2','Template3']
+templateNames:
+  - Template1
+  - Template2
+  - Template3

@@ -1,1 +1,10 @@
-[ 'Template1': ['App1', 'App2'], 'Template2': ['App3', 'App4'], 'Template3': ['App5', 'App6'] ]
+detailedApplications:
+  Template1:
+    - App1
+    - App2
+  Template2:
+    - App3
+    - App4
+  Template3:
+    - App5
+    - App6
