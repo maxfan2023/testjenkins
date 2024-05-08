@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('准备') {
             steps {
-                node {
+
                     // 读取 detailed_applications.yaml 文件
                     detailedApplications = readYaml(file(workspacePath + '/applications.yaml'))
 
@@ -18,7 +18,7 @@ pipeline {
 
                     // 更新第二个下拉列表选项
                     updateChoiceParameter('detailedApplication', filteredApps.collect { it })
-                }
+
             }
         }
 
