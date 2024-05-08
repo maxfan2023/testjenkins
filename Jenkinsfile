@@ -9,16 +9,17 @@ pipeline {
     stages {
         stage('准备') {
             steps {
+                    node {
 
-                    // 读取 detailed_applications.yaml 文件
-                    def detailedApplications = readYaml(file(workspacePath + '/applications.yaml'))
+                                // 读取 detailed_applications.yaml 文件
+                                def detailedApplications = readYaml(file(workspacePath + '/applications.yaml'))
 
-                    // 根据 templateName 过滤 detailedApplications
-                    def filteredApps = detailedApplications[params.templateName] ?: []
+                                // 根据 templateName 过滤 detailedApplications
+                                def filteredApps = detailedApplications[params.templateName] ?: []
 
-                    // 更新第二个下拉列表选项
-                    updateChoiceParameter('detailedApplication', filteredApps.collect { it })
-
+                                // 更新第二个下拉列表选项
+                                updateChoiceParameter('detailedApplication', filteredApps.collect { it })
+                  }
             }
         }
 
