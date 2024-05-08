@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('准备') {
             steps {
-                    node {
+                    script {
 
                                 // 读取 detailed_applications.yaml 文件
                                 def detailedApplications = readYaml(file(workspacePath + '/applications.yaml'))
