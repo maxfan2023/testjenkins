@@ -24,6 +24,9 @@ pipeline {
 
         stage('Build') {
             // 您的构建步骤...
+            // 显示选定的下拉列表值
+            echo "Selected template: ${params.templateName}"
+            echo "Selected application: ${params.detailedApplication}"
         }
     }
 }
