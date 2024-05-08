@@ -2,51 +2,33 @@ pipeline {
     agent any
 
     parameters {
-        stringParam(name: 'templateName', defaultValue: '', description: 'Select a template')
-        stringParam(name: 'detailedApplication', defaultValue: '', description: 'Select an application')
+        choice(name: 'templateName', choices: readFile('templates.yaml').templateNames, description: '选择模板')
+        choice(name: 'detailedApplication', choices: ['': ''], description: '选择应用')
     }
 
     stages {
-        stage('Prepare') {
+        stage('准备') {
             steps {
                 script {
-                    // Read template names from YAML file
-                    templateNames = readFile('templates.yaml').split("\n").findAll { it.trim() }.collect { it.trim() }
-
-                    // Get user-selected template name
-                    selectedTemplate = params.templateName
-
-                    // Read detailed applications from YAML file
+                    // 读取 detailed_applications.yaml 文件
                     detailedApplications = readYaml('applications.yaml')
 
-                    // Filter applications based on selected template (using conditional logic)
-                    filteredApps = detailedApplications[selectedTemplate] ?: []
+                    // 根据 templateName 过滤 detailedApplications
+                    filteredApps = detailedApplications[params.templateName] ?: []
 
-                    // Update second dropdown options dynamically (using conditional logic in next stage)
-                    availableApps = filteredApps.collect { it }
+                    // 更新第二个下拉列表选项
+                    updateChoiceParameter('detailedApplication', filteredApps.collect { it })
                 }
             }
         }
 
-        stage('Build') {
+        stage('构建') {
             steps {
-                // Your build steps...
+                // 您的构建步骤...
 
-                // Conditionally set choices for second dropdown based on selectedTemplate
-                script {
-                    if (selectedTemplate) {
-                        echo "Selected template: ${selectedTemplate}"
-                        stage('Update Application Choices') {
-                            // Update choices for 'detailedApplication' parameter dynamically
-                            updateChoiceParameter('detailedApplication', availableApps)
-                        }
-                    } else {
-                        echo "No template selected."
-                    }
-
-                    // Access selected application (if applicable)
-                    echo "Selected application: ${params.detailedApplication}"
-                }
+                // 显示选定的下拉列表值
+                echo "选择的模板: ${params.templateName}"
+                echo "选择的应用: ${params.detailedApplication}"
             }
         }
     }
