@@ -18,7 +18,7 @@ pipeline {
                // Read the YAML file
                def locationMap = readYaml file: 'locations.yml'
                // Extract the keys (countries) from the map
-               def countries = locationMap.keySet()
+               def countries = locationMap.keySet().toList()
                // Print the countries
                println(countries)
 
