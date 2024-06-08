@@ -25,10 +25,10 @@ pipeline {
 
                             // 第二级参数：选择省份
                             [$class: 'DynamicReferenceParameter',
-                             choiceType: 'ET_FORMATTED_HTML',
+                             choiceType: 'PT_SINGLE_SELECT',
                              name: 'PROVINCE2',
                              description: "<font size=8 cols=\"60\" style=\"color:red\">*</font>Select province2 Please",
-                             omitValueField: true,
+                             omitValueField: false,
                              referencedParameters: 'COUNTRY',
                              randomName: 'choice-parameter-1538199013155083',
                              script: [$class: 'GroovyScript',
@@ -37,7 +37,7 @@ pipeline {
                                                script: '''
                                                 def country = COUNTRY
                                                 if (country == 'China') {
-                                                    return ["guangdong", "shandong"]
+                                                    return ["guangdong", "shandong", "jiangsu", "zhejiang"]
                                                 } else if (country == 'US') {
                                                     return ["New York", "California"]
                                                 } else {
