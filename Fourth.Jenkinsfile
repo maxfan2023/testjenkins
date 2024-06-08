@@ -3,6 +3,7 @@ pipeline {
     stages {
        stage('Build'){
         steps {
+            script {
                // Read the YAML file
                def locationMap = readYaml file: 'locations.yml'
 
@@ -24,6 +25,8 @@ pipeline {
                    ])
                ])
                echo 'Building..'
+
+            }
 
         }
     }
