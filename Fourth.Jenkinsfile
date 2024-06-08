@@ -1,3 +1,12 @@
+// Define methods to populate data
+def populateProvinces(String country){
+   return locationMap[country]?.keySet().toList() ?: ["Not Applicable"]
+}
+
+def populateCities(String country, String province){
+   return locationMap[country]?.get(province) ?: ["Not Applicable"]
+}
+
 pipeline {
     agent any
     stages {
@@ -7,14 +16,7 @@ pipeline {
                // Read the YAML file
                def locationMap = readYaml file: 'locations.yml'
 
-               // Define methods to populate data
-               String populateProvinces(String country){
-                   return locationMap[country]?.keySet().toList() ?: ["Not Applicable"]
-               }
 
-               String populateCities(String country, String province){
-                   return locationMap[country]?.get(province) ?: ["Not Applicable"]
-               }
 
                // Properties step to set the Active choice parameters via Declarative Scripting
                properties([
