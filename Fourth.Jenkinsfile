@@ -9,6 +9,9 @@ String populateCities(country, province, locationMap){
     return cities ? cities : ["Not Applicable"]
 }
 
+def locationMap
+def countries
+
 pipeline {
     agent any
     stages {
@@ -16,9 +19,9 @@ pipeline {
         steps {
             script {
                // Read the YAML file
-               def locationMap = readYaml file: 'locations.yml'
+               locationMap = readYaml file: 'locations.yml'
                // Extract the keys (countries) from the map
-               def countries = locationMap.keySet().toList()
+               countries = locationMap.keySet().toList()
                def cnt_list=['China','US']
                // Print the countries
                println(countries)
@@ -27,7 +30,7 @@ pipeline {
                // Properties step to set the Active choice parameters via Declarative Scripting
                properties([
                    parameters([
-                       [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'COUNTRY', script:[$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'],script: [classpath: [], sandbox: false, script:  'return ["China","US"]']]],
+                       [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'COUNTRY', script:[$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'],script: [classpath: [], sandbox: false, script:  'return ${countries}]']]],
                        [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'PROVINCE', referencedParameters: 'COUNTRY',script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: "return ${populateProvinces(params.COUNTRY, locationMap)}"]]],
                        [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'CITY', referencedParameters: 'PROVINCE', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: "return ${populateCities(params.COUNTRY, params.PROVINCE, locationMap)}"]]]
                    ])
