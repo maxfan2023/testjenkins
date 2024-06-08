@@ -1,0 +1,6 @@
+China:
+  guangdong: ["GuangZhou", "Shenzhen"]
+  shandong: ["JiNan", "QingDao"]
+US:
+  New York: ["New York City", "Buffalo"]
+  California: ["Los Angeles", "San Francisco"]
