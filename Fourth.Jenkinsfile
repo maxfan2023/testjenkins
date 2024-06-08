@@ -32,6 +32,7 @@ pipeline {
                    ])
                ])
                echo 'Building..'
+               echo "countries is ${countries}"
             }
           }
         }
