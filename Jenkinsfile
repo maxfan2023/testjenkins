@@ -35,14 +35,9 @@ pipeline {
                                       fallbackScript: [classpath: [], sandbox: true, script: ''],
                                       script: [classpath: [], sandbox: true,
                                                script: '''
-                                                def country = COUNTRY
-                                                if (country == 'China') {
+
                                                     return ["guangdong", "shandong", "jiangsu", "zhejiang"]
-                                                } else if (country == 'US') {
-                                                    return ["New York", "California"]
-                                                } else {
-                                                    return ["No provinces available"]
-                                                }
+
                                                '''
                                               ]
                                      ]
