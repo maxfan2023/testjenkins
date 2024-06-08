@@ -1,10 +1,10 @@
 // Define methods to populate data
-def populateProvinces(country, locationMap){
+String populateProvinces(country, locationMap){
     def provinces = locationMap[country]
     return provinces ? provinces.keySet().toList() : ["Not Applicable"]
 }
 
-def populateCities(country, province, locationMap){
+String populateCities(country, province, locationMap){
     def cities = locationMap[country]?.get(province)
     return cities ? cities : ["Not Applicable"]
 }
