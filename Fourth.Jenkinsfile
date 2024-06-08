@@ -30,7 +30,7 @@ pipeline {
                // Properties step to set the Active choice parameters via Declarative Scripting
                properties([
                    parameters([
-                       [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'COUNTRY', script:[$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'],script: [classpath: [], sandbox: false, script:  'return ${countries}']]],
+                       [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'COUNTRY', script:[$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'],script: [classpath: [], sandbox: false, script:  "return ${countries}"]]],
                        [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'PROVINCE', referencedParameters: 'COUNTRY',script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: "return ${populateProvinces(params.COUNTRY, locationMap)}"]]],
                        [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'CITY', referencedParameters: 'PROVINCE', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: "return ${populateCities(params.COUNTRY, params.PROVINCE, locationMap)}"]]]
                    ])
