@@ -27,7 +27,7 @@ pipeline {
                echo 'Building..'
 
             }
-
+          }
         }
     }
 }
