@@ -1,10 +1,12 @@
 // Define methods to populate data
 def populateProvinces(country, locationMap){
-    return locationMap[country]?.keySet().toList() ?: ["Not Applicable"]
+    def provinces = locationMap[country]
+    return provinces ? provinces.keySet().toList() : ["Not Applicable"]
 }
 
 def populateCities(country, province, locationMap){
-    return locationMap[country]?.get(province) ?: ["Not Applicable"]
+    def cities = locationMap[country]?.get(province)
+    return cities ? cities : ["Not Applicable"]
 }
 
 pipeline {
