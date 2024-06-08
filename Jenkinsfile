@@ -17,7 +17,7 @@ properties([
         ],
 
         // 第二级参数：选择省份
-        [$class: 'DynamicReferenceParameter',
+        [$class: 'ChoiceParameter',
          choiceType: 'PT_SINGLE_SELECT',
          name: 'PROVINCE2',
          description: "<font size=8 cols=\"60\" style=\"color:red\">*</font>Select province2 Please</font>",
