@@ -29,9 +29,16 @@ properties([
                   script: [classpath: [], sandbox: true,
                            script: '''
 
-                                return ["guangdong", "shandong", "jiangsu", "zhejiang"]
+                                        def country = COUNTRY
+                                        if (country == 'China') {
+                                            return ["guangdong", "shandong", "jiangsu", "zhejiang"]
+                                        } else if (country == 'US') {
+                                            return ["New York", "California"]
+                                        } else {
+                                            return ["No provinces available"]
+                                        }
 
-                           '''
+                                    '''
                           ]
                  ]
         ],
