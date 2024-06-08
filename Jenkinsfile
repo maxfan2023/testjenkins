@@ -27,7 +27,7 @@ pipeline {
                             [$class: 'DynamicReferenceParameter',
                              choiceType: 'PT_SINGLE_SELECT',
                              name: 'PROVINCE2',
-                             description: "<font size=8 cols=\"60\" style=\"color:red\">*</font>Select province2 Please",
+                             description: "<font size=8 cols=\"60\" style=\"color:red\">*</font>Select province2 Please</font>",
                              omitValueField: false,
                              referencedParameters: 'COUNTRY',
                              randomName: 'choice-parameter-1538199013155083',
