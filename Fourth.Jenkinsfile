@@ -19,18 +19,14 @@ pipeline {
                def locationMap = readYaml file: 'locations.yml'
                // Extract the keys (countries) from the map
                def countries = locationMap.keySet().toList()
+               def cnt_list=['China','US']
                // Print the countries
                println(countries)
 
                // Properties step to set the Active choice parameters via Declarative Scripting
                properties([
                    parameters([
-                                                               choice(
-                                            name: 'COUNTRY',
-                                            description: 'Select from these choices',
-                                            choices: countries
-                                        ),
-//                        [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'COUNTRY', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false, script:  "return ${countries}"]]],
+                       [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'COUNTRY', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false, script:  "return ${cnt_list}"]]],
                        [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'PROVINCE', referencedParameters: 'COUNTRY', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: "return ${populateProvinces(params.COUNTRY, locationMap)}"]]],
                        [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT',name: 'CITY', referencedParameters: 'PROVINCE', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: "return ${populateCities(params.COUNTRY, params.PROVINCE, locationMap)}"]]]
                    ])
