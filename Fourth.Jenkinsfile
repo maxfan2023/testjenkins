@@ -17,6 +17,10 @@ pipeline {
             script {
                // Read the YAML file
                def locationMap = readYaml file: 'locations.yml'
+               // Extract the keys (countries) from the map
+               def countries = locationMap.keySet()
+               // Print the countries
+               println(countries)
 
                // Properties step to set the Active choice parameters via Declarative Scripting
                properties([
