@@ -17,7 +17,7 @@ properties([
         ],
 
         // 第二级参数：选择省份
-        [$class: 'ChoiceParameter',
+        [$class: 'DynamicReferenceParameter',
          choiceType: 'PT_SINGLE_SELECT',
          name: 'PROVINCE2',
          description: "<font size=8 cols=\"60\" style=\"color:red\">*</font>Select province2 Please</font>",
@@ -28,7 +28,6 @@ properties([
                   fallbackScript: [classpath: [], sandbox: true, script: ''],
                   script: [classpath: [], sandbox: true,
                            script: '''
-
                                         def country = COUNTRY
                                         if (country == 'China') {
                                             return ["guangdong", "shandong", "jiangsu", "zhejiang"]
@@ -37,7 +36,6 @@ properties([
                                         } else {
                                             return ["No provinces available"]
                                         }
-
                                     '''
                           ]
                  ]
