@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 // Load YAML file
-def locations = readYaml file: 'locations.yml'
+def locations = readYaml file: 'locations2.yml'
 
 // Define variables
 List country_list = ["\"Select:selected\""] + locations.keySet().collect { "\"${it}\"" }
