@@ -1,5 +1,28 @@
 #!/usr/bin/env groovy
 
+// Methods to build groovy scripts to populate data
+def buildScript(List values) {
+    return "return ${values}"
+}
+
+def buildProvinceScript(Map province_map, List default_item) {
+    def script = "if (COUNTRY.equals('Select:selected')) { return ${default_item} }"
+    province_map.each { country, provinces ->
+        script += " else if (COUNTRY.equals('${country}')) { return ${provinces} }"
+    }
+    script += " else { return ${default_item} }"
+    return script
+}
+
+def buildCityScript(Map city_map, List default_item) {
+    def script = "if (PROVINCE.equals('Select:selected')) { return ${default_item} }"
+    city_map.each { province, cities ->
+        script += " else if (PROVINCE.equals('${province}')) { return ${cities} }"
+    }
+    script += " else { return ${default_item} }"
+    return script
+}
+
 pipeline {
     agent any
     stages {
@@ -18,29 +41,6 @@ pipeline {
                     String countries = buildScript(country_list)
                     String provinces = buildProvinceScript(province_map, default_item)
                     String cities = buildCityScript(city_map, default_item)
-
-                    // Methods to build groovy scripts to populate data
-                    def buildScript(List values) {
-                        return "return ${values}"
-                    }
-
-                    def buildProvinceScript(Map province_map, List default_item) {
-                        def script = "if (COUNTRY.equals('Select:selected')) { return ${default_item} }"
-                        province_map.each { country, provinces ->
-                            script += " else if (COUNTRY.equals('${country}')) { return ${provinces} }"
-                        }
-                        script += " else { return ${default_item} }"
-                        return script
-                    }
-
-                    def buildCityScript(Map city_map, List default_item) {
-                        def script = "if (PROVINCE.equals('Select:selected')) { return ${default_item} }"
-                        city_map.each { province, cities ->
-                            script += " else if (PROVINCE.equals('${province}')) { return ${cities} }"
-                        }
-                        script += " else { return ${default_item} }"
-                        return script
-                    }
 
                     // Set job properties with parameters
                     properties([
