@@ -20,11 +20,11 @@ pipeline {
                     String cities = buildCityScript(city_map, default_item)
 
                     // Methods to build groovy scripts to populate data
-                    String buildScript(List values) {
+                    def buildScript(List values) {
                         return "return ${values}"
                     }
 
-                    String buildProvinceScript(Map province_map, List default_item) {
+                    def buildProvinceScript(Map province_map, List default_item) {
                         def script = "if (COUNTRY.equals('Select:selected')) { return ${default_item} }"
                         province_map.each { country, provinces ->
                             script += " else if (COUNTRY.equals('${country}')) { return ${provinces} }"
@@ -33,7 +33,7 @@ pipeline {
                         return script
                     }
 
-                    String buildCityScript(Map city_map, List default_item) {
+                    def buildCityScript(Map city_map, List default_item) {
                         def script = "if (PROVINCE.equals('Select:selected')) { return ${default_item} }"
                         city_map.each { province, cities ->
                             script += " else if (PROVINCE.equals('${province}')) { return ${cities} }"
