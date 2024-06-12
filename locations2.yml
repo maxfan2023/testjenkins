@@ -1,0 +1,13 @@
+China:
+  guangdong:
+    - guangzhou
+    - shenzhen
+  shandong:
+    - Jinan
+    - qingdao
+US:
+  New York:
+    - New York
+  California:
+    - San Francisco
+    - Los Angel
