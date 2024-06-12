@@ -1,7 +1,5 @@
 #!/usr/bin/env groovy
 
-@Library('pipeline-utility-steps') _
-
 // Load YAML file
 def locations = readYaml file: 'locations.yml'
 
