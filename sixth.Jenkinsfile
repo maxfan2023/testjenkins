@@ -1,107 +1,52 @@
-boolean hasUpperCase(String str) {
-  return str =~ /[A-Z]/
-}
-
-boolean hasLowerCase(String str) {
-  return str =~ /[a-z]/
-}
-
-boolean hasNumber(String str) {
-  return str =~ /\d/
-}
-
-boolean hasSymbol(String str) {
-  return str =~ /[^a-zA-Z0-9]/
-}
-
-boolean validateComplexity(String password) {
-  return hasUpperCase(password) && hasLowerCase(password) && hasNumber(password) && hasSymbol(password);
-}
-
-boolean validatePassword(String password) {
-  if (password.isEmpty()) {
-    return false; // Password cannot be empty
-  }
-  if (password.length() < 8) { // Adjust minimum length as needed
-    return false; // Password must meet minimum length requirement
-  }
-  if (!validateComplexity(password)) {
-    return false; // Password must meet complexity requirements
-  }
-  return true; // Password is valid
-}
 pipeline {
     agent any
-
     parameters {
-        password(name: 'password', defaultValue: '', description: 'Enter your password', sensitive: true)
-
-        booleanProperty(name: 'passwordValid', defaultValue: false, description: '')
-   }
-
-    stages {
-        stage('Validate Password') {
-            steps {
-                script {
-
-
-                    passwordValid = validatePassword(params.password)
-                }
-            }
-            post {
-                successIf true: "${passwordValid}"
-                failure {
-                    error "Invalid password. Please ensure it meets the requirements (minimum 8 characters with uppercase, lowercase, number, and symbol)."
-                }
-            }
-        }
-
-        stage('Build') {
-            when {
-                expression { return "${passwordValid}" }
-            }
-            steps {
-                // Build steps go here
+        activeChoiceParam('PASSWORD_CHOICE') {
+            description('Enter and confirm your password')
+            choiceType('TEXT')
+            groovyScript {
+                script("""
+                    def html = '''
+                    <script>
+                        function validatePassword() {
+                            var pass1 = document.getElementsByName("PASSWORD")[0].value;
+                            var pass2 = document.getElementsByName("CONFIRM_PASSWORD")[0].value;
+                            if(pass1 != pass2) {
+                                alert("Passwords do not match!");
+                                return false;
+                            }
+                            return true;
+                        }
+                    </script>
+                    <form onsubmit="return validatePassword()">
+                        Password: <input type="password" name="PASSWORD"/><br/>
+                        Confirm Password: <input type="password" name="CONFIRM_PASSWORD"/><br/>
+                        <input type="submit" value="Submit"/>
+                    </form>
+                    '''
+                    return html
+                """)
+                fallbackScript('return ["<h3>Unable to display form</h3>"]')
             }
         }
     }
-}
-
-
-pipeline {
-    agent any
-
-    parameters {
-        password(name: 'password', defaultValue: '', description: 'Enter your password', sensitive: true)
-    }
-
-    properties([
-        booleanProperty(name: 'passwordValid', defaultValue: false, description: '')
-    ])
-
     stages {
-        stage('Validate Password') {
+        stage('Validate Input') {
             steps {
                 script {
-≈
-
-                    passwordValid = validatePassword(params.password)
-                }
-            }
-            post {
-                successIf true: "${passwordValid}"
-                failure {
-                    error "Invalid password. Please ensure it meets the requirements (minimum 8 characters with uppercase, lowercase, number, and symbol)."
+                    // Access the submitted password values here
+                    def password = params.PASSWORD
+                    def confirmPassword = params.CONFIRM_PASSWORD
+                    if (password != confirmPassword) {
+                        error("Passwords do not match. Please try again.")
+                    }
                 }
             }
         }
-
-        stage('Build') {
-            when {
-                expression { return "${passwordValid}" }
-            }
+        stage('Proceed with Build') {
             steps {
-                // Build steps go here
+                echo "Password is set and matches the confirmation."
+                // Your build steps here
             }
         }
     }
