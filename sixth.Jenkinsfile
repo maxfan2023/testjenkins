@@ -35,11 +35,9 @@ pipeline {
 
     parameters {
         password(name: 'password', defaultValue: '', description: 'Enter your password', sensitive: true)
-    }
 
-    properties([
         booleanProperty(name: 'passwordValid', defaultValue: false, description: '')
-    ])
+   }
 
     stages {
         stage('Validate Password') {
