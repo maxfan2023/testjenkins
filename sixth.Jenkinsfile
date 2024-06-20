@@ -1,36 +1,35 @@
 pipeline {
     agent any
-
     parameters {
-        string(name: 'PASSWORD', defaultValue: '', description: 'Enter your password')
-        string(name: 'CONFIRM_PASSWORD', defaultValue: '', description: 'Confirm your password')
-        activeChoiceReactiveParam(
+        password(name: 'PASSWORD1', defaultValue: '', description: 'Enter your password')
+        password(name: 'PASSWORD2', defaultValue: '', description: 'Re-enter your password')
+        extendedChoice(
             name: 'PASSWORD_VALIDATION',
-            description: 'Password Validation',
-            choiceType: 'SINGLE_SELECT',
-            groovyScript: [script: '''
-                if (!PASSWORD.equals(CONFIRM_PASSWORD)) {
-                    return ['Passwords do not match!']
-                } else {
-                    return ['Passwords match.']
-                }
-            ''', fallbackScript: 'return ["Validation Failed"]']
+            type: 'PT_TEXTBOX',
+            defaultValue: '',
+            description: 'Password validation result',
+            visibleItemCount: 1,
+            script: [
+                classpath: [],
+                fallbackScript: 'return [""]',
+                script: '''
+                    def password1 = binding.getVariable("PASSWORD1")
+                    def password2 = binding.getVariable("PASSWORD2")
+
+                    if (password1 != password2) {
+                        return ["Passwords do not match!"]
+                    } else {
+                        return ["Passwords match!"]
+                    }
+                '''
+            ]
         )
     }
-
     stages {
-        stage('Validate Passwords') {
+        stage('Build') {
             steps {
-                script {
-                    def validation = params.PASSWORD_VALIDATION
-                    if (validation.contains('do not match')) {
-                        error "Passwords do not match. Please re-enter."
-                    } else {
-                        echo "Passwords match. Proceeding with the pipeline."
-                    }
-                }
+                echo 'Building...'
             }
         }
-        // Additional stages can be added here
     }
 }
