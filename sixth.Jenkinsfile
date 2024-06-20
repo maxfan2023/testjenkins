@@ -47,7 +47,9 @@ pipeline {
                         parameters([
                             [$class: 'ChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'COUNTRY', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["ERROR"]'], script: [classpath: [], sandbox: false, script: countries]]],
                             [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'PROVINCE', referencedParameters: 'COUNTRY', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: provinces]]],
-                            [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'CITY', referencedParameters: 'PROVINCE', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: cities]]]
+                            [$class: 'CascadeChoiceParameter', choiceType: 'PT_SINGLE_SELECT', name: 'CITY', referencedParameters: 'PROVINCE', script: [$class: 'GroovyScript', fallbackScript: [classpath: [], sandbox: false, script: 'return ["error"]'], script: [classpath: [], sandbox: false, script: cities]]],
+                            [$class: 'PasswordParameterDefinition', name: 'PASSWORD1', defaultValue: '', description: 'Enter your password'],
+                            [$class: 'PasswordParameterDefinition', name: 'PASSWORD2', defaultValue: '', description: 'Enter your password again']
                         ])
                     ])
                 }
