@@ -67,3 +67,43 @@ pipeline {
         }
     }
 }
+
+
+pipeline {
+    agent any
+
+    parameters {
+        password(name: 'password', defaultValue: '', description: 'Enter your password', sensitive: true)
+    }
+
+    properties([
+        booleanProperty(name: 'passwordValid', defaultValue: false, description: '')
+    ])
+
+    stages {
+        stage('Validate Password') {
+            steps {
+                script {
+≈
+
+                    passwordValid = validatePassword(params.password)
+                }
+            }
+            post {
+                successIf true: "${passwordValid}"
+                failure {
+                    error "Invalid password. Please ensure it meets the requirements (minimum 8 characters with uppercase, lowercase, number, and symbol)."
+                }
+            }
+        }
+
+        stage('Build') {
+            when {
+                expression { return "${passwordValid}" }
+            }
+            steps {
+                // Build steps go here
+            }
+        }
+    }
+}
