@@ -1,18 +1,3 @@
-pipeline {
-    agent any
-
-    parameters {
-        password(name: 'password', defaultValue: '', description: 'Enter your password', sensitive: true)
-    }
-
-    properties([
-        booleanProperty(name: 'passwordValid', defaultValue: false, description: '')
-    ])
-
-    stages {
-        stage('Validate Password') {
-            steps {
-                script {
                     boolean hasUpperCase(String str) {
                       return str =~ /[A-Z]/
                     }
@@ -45,6 +30,22 @@ pipeline {
                       }
                       return true; // Password is valid
                     }
+pipeline {
+    agent any
+
+    parameters {
+        password(name: 'password', defaultValue: '', description: 'Enter your password', sensitive: true)
+    }
+
+    properties([
+        booleanProperty(name: 'passwordValid', defaultValue: false, description: '')
+    ])
+
+    stages {
+        stage('Validate Password') {
+            steps {
+                script {
+
 
                     passwordValid = validatePassword(params.password)
                 }
