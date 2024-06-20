@@ -1,35 +1,35 @@
-                    boolean hasUpperCase(String str) {
-                      return str =~ /[A-Z]/
-                    }
+boolean hasUpperCase(String str) {
+  return str =~ /[A-Z]/
+}
 
-                    boolean hasLowerCase(String str) {
-                      return str =~ /[a-z]/
-                    }
+boolean hasLowerCase(String str) {
+  return str =~ /[a-z]/
+}
 
-                    boolean hasNumber(String str) {
-                      return str =~ /\d/
-                    }
+boolean hasNumber(String str) {
+  return str =~ /\d/
+}
 
-                    boolean hasSymbol(String str) {
-                      return str =~ /[^a-zA-Z0-9]/
-                    }
+boolean hasSymbol(String str) {
+  return str =~ /[^a-zA-Z0-9]/
+}
 
-                    boolean validateComplexity(String password) {
-                      return hasUpperCase(password) && hasLowerCase(password) && hasNumber(password) && hasSymbol(password);
-                    }
+boolean validateComplexity(String password) {
+  return hasUpperCase(password) && hasLowerCase(password) && hasNumber(password) && hasSymbol(password);
+}
 
-                    boolean validatePassword(String password) {
-                      if (password.isEmpty()) {
-                        return false; // Password cannot be empty
-                      }
-                      if (password.length() < 8) { // Adjust minimum length as needed
-                        return false; // Password must meet minimum length requirement
-                      }
-                      if (!validateComplexity(password)) {
-                        return false; // Password must meet complexity requirements
-                      }
-                      return true; // Password is valid
-                    }
+boolean validatePassword(String password) {
+  if (password.isEmpty()) {
+    return false; // Password cannot be empty
+  }
+  if (password.length() < 8) { // Adjust minimum length as needed
+    return false; // Password must meet minimum length requirement
+  }
+  if (!validateComplexity(password)) {
+    return false; // Password must meet complexity requirements
+  }
+  return true; // Password is valid
+}
 pipeline {
     agent any
 
